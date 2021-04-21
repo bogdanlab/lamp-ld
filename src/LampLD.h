@@ -1,7 +1,3 @@
-//
-// Created by Hou, Kangcheng on 4/8/21.
-//
-
 #ifndef LAMPLD_H
 #define LAMPLD_H
 

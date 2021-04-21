@@ -1,7 +1,3 @@
-//
-// Created by Hou, Kangcheng on 4/8/21.
-//
-
 #include "LampLD.h"
 #include "Utils.h"
 
@@ -135,10 +131,7 @@ LampLD::LampLD(int n_snp, int n_anc, int n_proto, int window_size) : n_snp(n_snp
         for (int i = 0; i < n_window; i++) {
             smooth_snp_index(i) = (snp_index(i) + snp_index(i + 1)) / 2;
         }
-#ifdef MY_DEBUG
-        cout << "LampLD: " << endl;
-        cout << smooth_snp_index << endl;
-#endif
+
         for (int i_window = 0; i_window < n_window - 1; i_window++) {
             smooth_hmm_array.push_back(vector<WindowHMM>());
             for (int i_anc = 0; i_anc < n_anc; i_anc++) {
@@ -166,7 +159,7 @@ void LampLD::fit(std::vector<Eigen::MatrixXi> ref_list) {
         for (int i_anc = 0; i_anc < n_anc; i_anc++) {
             WindowHMM &hmm = hmm_array[i_window][i_anc];
             const MatrixXi &ref_chunk(ref_list[i_anc](Eigen::all, Eigen::seq(start, stop - 1)));
-//            hmm.init_emit_from_X(ref_chunk);
+            hmm.init_emit_from_X(ref_chunk);
             hmm.fit(ref_chunk);
         }
     }
@@ -178,6 +171,7 @@ void LampLD::fit(std::vector<Eigen::MatrixXi> ref_list) {
             for (int i_anc = 0; i_anc < n_anc; i_anc++) {
                 WindowHMM &hmm = smooth_hmm_array[i_window][i_anc];
                 const MatrixXi &ref_chunk(ref_list[i_anc](Eigen::all, Eigen::seq(start, stop - 1)));
+                hmm.init_emit_from_X(ref_chunk);
                 hmm.fit(ref_chunk);
             }
         }

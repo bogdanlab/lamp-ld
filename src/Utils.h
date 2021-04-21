@@ -1,7 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include "json.hpp"
+#include "../thirdparty/json.hpp"
 #include <Eigen/Core>
 #include <cmath>
 #include <iostream>

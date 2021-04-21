@@ -1,7 +1,3 @@
-//
-// Created by Hou, Kangcheng on 4/8/21.
-//
-
 #ifndef FILEUTILS_H
 #define FILEUTILS_H
 #include <iostream>
@@ -9,7 +5,7 @@
 #include <Eigen/Core>
 #include <vector>
 #include <limits>
-#include "json.hpp"
+#include "../thirdparty/json.hpp"
 
 using namespace std;
 using namespace Eigen;
@@ -17,5 +13,6 @@ using namespace Eigen;
 MatrixXi read_int_mat(const std::string &path);
 VectorXi read_pos(const std::string &path);
 void write_int_mat(const std::string &path, const MatrixXi& mat);
+bool is_file_exist(const string & fileName);
 
-#endif //FILEUTILS_H
+#endif

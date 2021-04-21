@@ -8,7 +8,6 @@ void WindowHMM::init_from_file(const string &path) {
     file >> data;
 
     start = from_json(data["pi"]);
-    cout << data["trans"].size() << endl;
     for (int i = 0; i < data["trans"].size(); i++) {
         trans[i] = from_json(data["trans"].at(i));
     }
@@ -20,8 +19,7 @@ WindowHMM::WindowHMM(int n_snp, int n_proto) :
         n_snp(n_snp), n_proto(n_proto) {
 
     // set random number generator
-    std::uniform_real_distribution<double> uniform_dist(-1.0, 1.0);
-
+    std::uniform_real_distribution<double> unif_dist(-1.0, 1.0);
 
     // initialize model parameters
     start = VectorXd::Constant(n_proto, 1.0 / n_proto);
@@ -36,8 +34,33 @@ WindowHMM::WindowHMM(int n_snp, int n_proto) :
             }
         }
     }
-
     emit = MatrixXd::Zero(n_snp, n_proto);
+
+    // TODO: check whether proper normalization has been performed.
+    if(init_add_noise){
+        // exp(uniform(-1,1))
+        for (int i = 0; i < n_proto; i++){
+            start(i) *= exp(unif_dist(random_engine));
+        }
+        start /= start.sum();
+        // exp(uniform(-1,1))
+        for (int t = 0; t < n_snp - 1; t++){
+            for (int i = 0; i < n_proto; i++) {
+                for (int j = 0; j < n_proto; j++) {
+                    trans[t](i, j) *= exp(unif_dist(random_engine));
+                }
+                trans[t].row(i) /= trans[t].row(i).sum();
+            }
+        }
+
+        // Uniform distribution [0, 1]
+        for (int t = 0; t < n_snp; t++){
+            for (int i = 0; i < n_proto; i++) {
+                emit(t, i) = (unif_dist(random_engine) + 1) / 2;
+            }
+        }
+    }
+
 
     // allocate sufficient statistics
     suff_stat_start = VectorXd::Zero(n_proto);
@@ -57,8 +80,9 @@ WindowHMM::WindowHMM(int n_snp, int n_proto) :
 }
 
 void WindowHMM::init_emit_from_X(const MatrixXi &X) {
+
     // X: (n_indiv, n_snp) integer matrix
-    int n_indiv = X.rows();
+    std::uniform_real_distribution<double> unif_dist(-1.0, 1.0);
 
     VectorXi minor_allele_count = X.colwise().sum();
     VectorXi major_allele_count(minor_allele_count.size());
@@ -68,7 +92,15 @@ void WindowHMM::init_emit_from_X(const MatrixXi &X) {
 
     for (int t = 0; t < n_snp; t++) {
         for (int i = 0; i < n_proto; i++) {
-            emit(t, i) = (minor_allele_count(t) + 1) / (minor_allele_count(t) + major_allele_count(t) + 2);
+            double a,b;
+            if (init_add_noise){
+                a = (minor_allele_count(t) + 1) * exp(unif_dist(random_engine));
+                b = (major_allele_count(t) + 1) * exp(unif_dist(random_engine));
+            }else{
+                a = (minor_allele_count(t) + 1);
+                b = (major_allele_count(t) + 1);
+            }
+            emit(t, i) = a / (a + b);
         }
     }
 }

@@ -4,7 +4,6 @@
 #include <vector>
 #include "LampLD.h"
 #include "FileUtils.h"
-#include "json.hpp"
 #include <boost/program_options.hpp>
 
 namespace po = boost::program_options;
@@ -132,6 +131,7 @@ int main(int argc, char *argv[]) {
 
     cout << "Reading data..." << endl;
     bool VERBOSE = true;
+
     // read data
     const Eigen::VectorXi pos = read_pos(pos_file);
     const Eigen::MatrixXi admix_hap = read_int_mat(admix_hap_file);
@@ -154,51 +154,41 @@ int main(int argc, char *argv[]) {
     }
 
 
-    // TODO: check data
-
-    // run analysis
+    cout << "Performing inference..." << endl;
     int n_snp = admix_hap.cols();
     int n_anc = vec_ref_hap.size();
     LampLD lamp(n_snp, n_anc, n_proto, window_size);
     lamp.set_pos(pos);
 
 #ifdef MY_DEBUG
-    int n_window = 10;
-    // DEBUG: initialize from file
-    for (int i_window = 0; i_window < n_window; i_window++) {
-        for (int i_anc = 0; i_anc < n_anc; i_anc++) {
-            lamp.hmm_array[i_window][i_anc].init_from_file(
-                    string("/Users/kangchenghou/work/LAMPLD-v1.3/out/anc_") + to_string(i_anc) + "_" +
-                    to_string(i_window * 300) + "_init.json");
-        }
-    }
-
-    for (int i_window = 0; i_window < n_window - 1; i_window++) {
-        for (int i_anc = 0; i_anc < n_anc; i_anc++) {
-            lamp.smooth_hmm_array[i_window][i_anc].init_from_file(
-                    string("/Users/kangchenghou/work/LAMPLD-v1.3/out/anc_") + to_string(i_anc) + "_" +
-                    to_string(i_window * 300 + 150) + "_init.json");
-        }
-    }
+//    int n_window = 10;
+//    // DEBUG: initialize from file
+//    for (int i_window = 0; i_window < n_window; i_window++) {
+//        for (int i_anc = 0; i_anc < n_anc; i_anc++) {
+//            lamp.hmm_array[i_window][i_anc].init_from_file(
+//                    string("/Users/kangchenghou/work/LAMPLD-v1.3/out/anc_") + to_string(i_anc) + "_" +
+//                    to_string(i_window * 300) + "_init.json");
+//        }
+//    }
+//
+//    for (int i_window = 0; i_window < n_window - 1; i_window++) {
+//        for (int i_anc = 0; i_anc < n_anc; i_anc++) {
+//            lamp.smooth_hmm_array[i_window][i_anc].init_from_file(
+//                    string("/Users/kangchenghou/work/LAMPLD-v1.3/out/anc_") + to_string(i_anc) + "_" +
+//                    to_string(i_window * 300 + 150) + "_init.json");
+//        }
+//    }
 #endif
-
 
     lamp.fit(vec_ref_hap);
-#ifdef MY_DEBUG
-    cout << "hmm_array[0][0]" << endl;
-    lamp.hmm_array[0][0].print_param();
-    cout << "smooth_hmm_array[0][0]" << endl;
-    lamp.smooth_hmm_array[0][0].print_param();
-#endif
     MatrixXi estimated_lanc = lamp.infer_lanc(admix_hap);
 
     // output
+    cout << "Writing results to " << out_file << endl;
     write_int_mat(out_file, estimated_lanc);
 
     return 0;
 }
-
-
 
 
 

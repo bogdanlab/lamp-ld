@@ -1,7 +1,3 @@
-//
-// Created by Hou, Kangcheng on 4/8/21.
-//
-
 #ifndef WINDOWHMM_H
 #define WINDOWHMM_H
 
@@ -11,7 +7,7 @@
 #include <vector>
 #include <limits>
 #include <random>
-#include "json.hpp"
+#include "../thirdparty/json.hpp"
 
 using namespace std;
 using namespace Eigen;
@@ -23,7 +19,6 @@ public:
     void fit(const MatrixXi &X);
 
     void init_emit_from_X(const MatrixXi &X);
-
     void init_from_file(const string &path);
 
     // model parameters
@@ -58,7 +53,7 @@ private:
 
     void do_mstep();
 
-    default_random_engine random_engine{random_device{}()};
+    default_random_engine random_engine;
 
     // preset constants
     const double rel_tol = 0.01;
@@ -71,7 +66,6 @@ private:
     const int n_snp;
     const int n_proto;
     int n_hap = -1;
-
 
     // sufficient statistics
     VectorXd suff_stat_start;
@@ -86,4 +80,4 @@ private:
 };
 
 
-#endif //WINDOWHMM_H
+#endif

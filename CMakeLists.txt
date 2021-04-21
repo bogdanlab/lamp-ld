@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.17)
 project(LAMP_LD)
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DMY_DEBUG")
+#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DMY_DEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DMY_DEBUG")
 
 set(CMAKE_CXX_STANDARD 17)
@@ -21,6 +21,6 @@ message( STATUS "Boost Dir: " ${Boost_INCLUDE_DIR})
 
 include_directories(${Boost_INCLUDE_DIR})
 include_directories(${EIGEN3_INCLUDE_DIR})
-add_executable(lampld main.cpp WindowHMM.cpp WindowHMM.h LampLD.cpp LampLD.h FileUtils.cpp FileUtils.h Utils.cpp Utils.h)
+add_executable(LAMP_LD src/main.cpp src/WindowHMM.cpp src/WindowHMM.h src/LampLD.cpp src/LampLD.h src/FileUtils.cpp src/FileUtils.h src/Utils.cpp src/Utils.h)
 
-target_link_libraries(lampld ${Boost_LIBRARIES})
+target_link_libraries(LAMP_LD ${Boost_LIBRARIES})

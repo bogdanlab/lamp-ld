@@ -1,8 +1,11 @@
-//
-// Created by Hou, Kangcheng on 4/8/21.
-//
-
 #include "FileUtils.h"
+
+bool is_file_exist(const string & fileName)
+{
+    std::ifstream infile(fileName);
+    return infile.good();
+}
+
 MatrixXi read_int_mat(const std::string &path) {
     std::ifstream in_data;
     in_data.open(path);
@@ -20,7 +23,6 @@ MatrixXi read_int_mat(const std::string &path) {
 }
 
 void write_int_mat(const std::string &path, const MatrixXi& mat) {
-
     ofstream output(path);
     for (int i = 0; i < mat.rows(); i++){
         for (int j = 0; j < mat.cols(); j++){
