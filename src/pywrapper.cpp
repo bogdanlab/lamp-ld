@@ -6,7 +6,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(lampld, m) {
+PYBIND11_MODULE(pylampld, m) {
     m.doc() = "Local ancestry inference";
 
     py::class_<LampLD>(m, "LampLD")

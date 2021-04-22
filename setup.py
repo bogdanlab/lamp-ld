@@ -1,7 +1,6 @@
 import os
 import re
 import sys
-import sysconfig
 import platform
 import subprocess
 
@@ -67,7 +66,7 @@ class CMakeBuild(build_ext):
         print()  # Add an empty line for cleaner output
 
 setup(
-    name='LAMP-LD',
+    name='pylampld',
     version='0.1',
     author='Kangcheng Hou',
     author_email='kangchenghou@gmail.com',
