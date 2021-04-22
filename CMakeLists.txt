@@ -9,4 +9,5 @@ set(CMAKE_CXX_STANDARD 11)
 
 add_executable(lampld src/main.cpp src/WindowHMM.cpp src/WindowHMM.h src/LampLD.cpp src/LampLD.h src/FileUtils.cpp src/FileUtils.h src/Utils.cpp src/Utils.h)
 
-target_link_libraries(lampld)
+install(TARGETS lampld)
+
