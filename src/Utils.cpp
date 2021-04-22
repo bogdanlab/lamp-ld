@@ -1,5 +1,13 @@
 #include "Utils.h"
 
+
+void print_progress(double percentage){
+    int val =  ceil(percentage * 100);
+    int lpad = ceil(percentage * PBWIDTH);
+    int rpad = PBWIDTH - lpad;
+    printf("\r%3d%% [%.*s%*s]", val, lpad, PBSTR, rpad, "");
+    fflush(stdout);
+}
 double logsumexp(const VectorXd & x) {
     double x_max = x.maxCoeff();
 

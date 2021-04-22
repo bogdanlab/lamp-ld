@@ -1,6 +1,7 @@
 #include "LampLD.h"
 #include "Utils.h"
 
+
 MatrixXi LampLD::infer_lanc(const MatrixXi &sample_hap) {
     assert(sample_hap.cols() == n_snp);
     int n_hap = sample_hap.rows();
@@ -97,7 +98,6 @@ void LampLD::smooth_lanc(const MatrixXi &admix_hap, MatrixXi &lanc) {
                         best_prob = fwd_array(i_snp - window_start, 0) + bwd_array(i_snp - window_start, 1) + rprob;
                     }
                 }
-//                printf("%d global (%d %d) (%d -> %d), prob (%f)\n", i_hap, bp_anc[0], bp_anc[1], bp,  i_best, best_prob);
                 if (i_best < bp) {
                     for (int i_snp = i_best; i_snp < bp; i_snp++) {
                         lanc(i_hap, i_snp) = bp_anc[1];
@@ -153,8 +153,9 @@ void LampLD::fit(std::vector<Eigen::MatrixXi> ref_list) {
     }
     assert(ref_list.size() == n_anc);
     int start, stop;
-
+    cout << "Fitting HMMs..." << endl;
     for (int i_window = 0; i_window < n_window; i_window++) {
+        print_progress((i_window + 1) / (double)n_window);
         start = snp_index(i_window);
         stop = snp_index(i_window + 1);
         for (int i_anc = 0; i_anc < n_anc; i_anc++) {
@@ -164,9 +165,11 @@ void LampLD::fit(std::vector<Eigen::MatrixXi> ref_list) {
             hmm.fit(ref_chunk);
         }
     }
-
+    cout << endl;
     if (smooth) {
+        cout << "Fitting smoothing HMMs..." << endl;
         for (int i_window = 0; i_window < n_window - 1; i_window++) {
+            print_progress((i_window + 1) / (double)(n_window - 1));
             start = smooth_snp_index(i_window);
             stop = smooth_snp_index(i_window + 1);
             for (int i_anc = 0; i_anc < n_anc; i_anc++) {
@@ -176,5 +179,6 @@ void LampLD::fit(std::vector<Eigen::MatrixXi> ref_list) {
                 hmm.fit(ref_chunk);
             }
         }
+        cout << endl;
     }
 }
