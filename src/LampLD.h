@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <fstream>
-#include <Eigen/Core>
+#include "../thirdparty/Eigen/Core"
 #include <vector>
 #include <limits>
 #include "WindowHMM.h"

@@ -1,5 +1,4 @@
 #include <iostream>
-#include <Eigen/Core>
 #include <vector>
 #include "LampLD.h"
 #include "FileUtils.h"

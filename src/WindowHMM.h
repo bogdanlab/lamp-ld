@@ -3,11 +3,11 @@
 
 #include <iostream>
 #include <fstream>
-#include <Eigen/Core>
 #include <vector>
 #include <limits>
 #include <random>
 #include "../thirdparty/json.hpp"
+#include "../thirdparty/Eigen/Core"
 
 using namespace std;
 using namespace Eigen;

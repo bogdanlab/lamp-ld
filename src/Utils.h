@@ -2,7 +2,7 @@
 #define UTILS_H
 
 #include "../thirdparty/json.hpp"
-#include <Eigen/Core>
+#include "../thirdparty/Eigen/Core"
 #include <cmath>
 #include <iostream>
 
