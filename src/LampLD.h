@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <fstream>
-#include "../thirdparty/Eigen/Core"
+#include <Eigen/Core>
 #include <vector>
 #include <limits>
 #include "WindowHMM.h"
@@ -23,14 +23,15 @@ public:
 
 private:
     Eigen::VectorXi snp_pos;
+    Eigen::VectorXi snp_index;
+    Eigen::VectorXi smooth_snp_index;
+
     const int n_snp;
     const int n_anc;
     const bool smooth = true;
     const int n_proto;
     const double recomb_rate = 1e-8;
     const bool verbose = true;
-    Eigen::VectorXi snp_index;
-    Eigen::VectorXi smooth_snp_index;
 };
 
 

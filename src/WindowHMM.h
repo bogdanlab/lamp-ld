@@ -7,7 +7,7 @@
 #include <limits>
 #include <random>
 #include "../thirdparty/json.hpp"
-#include "../thirdparty/Eigen/Core"
+#include <Eigen/Core>
 
 using namespace std;
 using namespace Eigen;

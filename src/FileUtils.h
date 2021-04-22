@@ -5,7 +5,7 @@
 #include <vector>
 #include <limits>
 #include "../thirdparty/json.hpp"
-#include "../thirdparty/Eigen/Core"
+#include <Eigen/Core>
 
 using namespace std;
 using namespace Eigen;
