@@ -1,12 +1,10 @@
 #include <iostream>
-#include <fstream>
 #include <Eigen/Core>
 #include <vector>
 #include "LampLD.h"
 #include "FileUtils.h"
-#include <boost/program_options.hpp>
+#include "../thirdparty/cxxopts.hpp"
 
-namespace po = boost::program_options;
 using namespace std;
 using namespace Eigen;
 using json = nlohmann::json;
@@ -54,46 +52,41 @@ using json = nlohmann::json;
 bool
 parse_command_line(int argc, char *argv[], int *window_size, int *n_proto, string &pos_file, string &admix_hap_file,
                    vector<string> &ref_hap_files, string &out_file) {
-    const char *help_text =
-            "For example case\n"
-            "lampld \\\n"
-            "--window 300 \\\n"
-            "--proto 6 \\\n"
-            "--pos pos.txt \\\n"
-            "--admix admix.hap \\\n"
-            "--ref EUR.hap AFR.hap EAS.hap \\\n"
-            "--out out.txt";
-    try {
 
-        po::options_description desc("Allowed options");
-        desc.add_options()
-                ("help", help_text)
-                ("window", po::value<int>(window_size)->default_value(300), "set window size")
-                ("proto", po::value<int>(n_proto)->default_value(4), "set number of prototypical stats")
-                ("pos", po::value<string>(&pos_file)->required(), "path to the SNP position file")
-                ("admix", po::value<string>(&admix_hap_file)->required(), "path to the admixed population haplotype")
-                ("ref", po::value<vector<string>>(&ref_hap_files)->multitoken(),
-                 "paths to the ancestral population haplotype")
-                ("out", po::value<string>(&out_file)->required(), "output prefix");
+    cxxopts::Options options("LAMP-LD", "Local ancestry inference");
 
-        po::variables_map vm;
-        po::store(po::parse_command_line(argc, argv, desc), vm);
+    options.add_options()
+            ("help", "print help text")
+            ("window",  "set window size", cxxopts::value<int>()->default_value("300"))
+            ("proto", "set number of prototypical states", cxxopts::value<int>()->default_value("4"))
+            ("pos", "path to the SNP position file", cxxopts::value<string>())
+            ("admix", "path to the admixed population haplotype", cxxopts::value<string>())
+            ("ref", "paths to the ancestral population haplotype", cxxopts::value<vector<string>>())
+            ("out", "output prefix", cxxopts::value<string>())
+            ;
 
-        if (vm.count("help")) {
-            cout << desc << "\n";
-            return 0;
-        }
-
-        po::notify(vm);
-
+    auto parser = options.parse(argc, argv);
+    if (parser.count("help"))
+    {
+        const char *help_text =
+                "Example usage\n"
+                "\tlampld \\\n"
+                "\t--window 300 \\\n"
+                "\t--proto 6 \\\n"
+                "\t--pos pos.txt \\\n"
+                "\t--admix admix.hap \\\n"
+                "\t--ref EUR.hap --ref AFR.hap --ref EAS.hap \\\n"
+                "\t--out out.txt";
+        std::cout << options.help() << std::endl;
+        cout << help_text << endl;
+        exit(0);
     }
-    catch (exception &e) {
-        cerr << "Error: " << e.what() << "\n";
-        return false;
-    }
-    catch (...) {
-        cerr << "Unknown error!\n";
-    }
+    *window_size = parser["window"].as<int>();
+    *n_proto = parser["proto"].as<int>();
+    pos_file = parser["pos"].as<string>();
+    admix_hap_file = parser["admix"].as<string>();
+    ref_hap_files = parser["ref"].as<vector<string>>();
+    out_file = parser["out"].as<string>();
     return true;
 }
 
@@ -120,14 +113,12 @@ int main(int argc, char *argv[]) {
          << "--window " << window_size << endl
          << "--proto " << n_proto << endl
          << "--pos " << pos_file << endl
-         << "--admix " << admix_hap_file << endl
-         << "--ref";
+         << "--admix " << admix_hap_file << endl;
 
     for (auto &ref: ref_hap_files) {
-        cout << " " << ref;
+        cout << "--ref " << ref << endl;
     }
-    cout << endl
-         << "--out " << out_file << "\n\n";
+    cout << "--out " << out_file << "\n\n";
 
     cout << "Reading data..." << endl;
     bool VERBOSE = true;

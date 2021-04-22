@@ -92,3 +92,5 @@ void decode_viterbi(const VectorXd &log_start, const vector<MatrixXd> &log_trans
     }
 }
 
+
+

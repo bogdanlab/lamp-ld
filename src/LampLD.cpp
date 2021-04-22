@@ -153,6 +153,7 @@ void LampLD::fit(std::vector<Eigen::MatrixXi> ref_list) {
     }
     assert(ref_list.size() == n_anc);
     int start, stop;
+
     for (int i_window = 0; i_window < n_window; i_window++) {
         start = snp_index(i_window);
         stop = snp_index(i_window + 1);

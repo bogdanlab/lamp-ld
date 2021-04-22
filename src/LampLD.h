@@ -31,9 +31,6 @@ private:
     const bool verbose = true;
     Eigen::VectorXi snp_index;
     Eigen::VectorXi smooth_snp_index;
-
-
-
 };
 
 
