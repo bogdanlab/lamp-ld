@@ -89,6 +89,7 @@ parse_command_line(int argc, char *argv[], int *window_size, int *n_proto, strin
     return true;
 }
 
+
 int main(int argc, char *argv[]) {
     int window_size;
     int n_proto;
@@ -96,17 +97,26 @@ int main(int argc, char *argv[]) {
     string admix_hap_file;
     vector<string> ref_hap_files;
     string out_file;
-
-    bool parse_success = parse_command_line(argc, argv,
+    #ifdef MY_DEBUG
+        window_size=200;
+        n_proto=4;
+        string data_dir("/Users/kangchenghou/Dropbox/public/admix_tools_data/AMR_PRS_DATA/");
+        pos_file = data_dir + "pos.txt";
+        admix_hap_file = data_dir + "admix.hap";
+        ref_hap_files = {data_dir + "EUR.hap", data_dir + "AFR.hap"};
+        out_file = "/Users/kangchenghou/work/LAMP-LD/out/out.txt";
+    #else
+        bool parse_success = parse_command_line(argc, argv,
                                             &window_size,
                                             &n_proto,
                                             pos_file,
                                             admix_hap_file,
                                             ref_hap_files,
                                             out_file);
-    if (!parse_success) {
-        return 1;
-    }
+        if (!parse_success) {
+            return 1;
+        }
+    #endif
     // print received parameters
     cout << "Received options: " << endl
          << "--window " << window_size << endl
@@ -151,23 +161,25 @@ int main(int argc, char *argv[]) {
     lamp.set_pos(pos);
 
 #ifdef MY_DEBUG
-//    int n_window = 10;
-//    // DEBUG: initialize from file
-//    for (int i_window = 0; i_window < n_window; i_window++) {
-//        for (int i_anc = 0; i_anc < n_anc; i_anc++) {
-//            lamp.hmm_array[i_window][i_anc].init_from_file(
-//                    string("/Users/kangchenghou/work/LAMPLD-v1.3/out/anc_") + to_string(i_anc) + "_" +
-//                    to_string(i_window * 300) + "_init.json");
-//        }
-//    }
-//
-//    for (int i_window = 0; i_window < n_window - 1; i_window++) {
-//        for (int i_anc = 0; i_anc < n_anc; i_anc++) {
-//            lamp.smooth_hmm_array[i_window][i_anc].init_from_file(
-//                    string("/Users/kangchenghou/work/LAMPLD-v1.3/out/anc_") + to_string(i_anc) + "_" +
-//                    to_string(i_window * 300 + 150) + "_init.json");
-//        }
-//    }
+
+    // DEBUG: initialize from file
+    int n_window = 5;
+
+    for (int i_window = 0; i_window < n_window; i_window++) {
+        for (int i_anc = 0; i_anc < n_anc; i_anc++) {
+            lamp.hmm_array[i_window][i_anc].init_from_file(
+                    string("/Users/kangchenghou/work/LAMPLD-v1.3/out/anc_") + to_string(i_anc) + "_" +
+                    to_string(i_window * 200) + "_init.json");
+        }
+    }
+
+    for (int i_window = 0; i_window < n_window - 1; i_window++) {
+        for (int i_anc = 0; i_anc < n_anc; i_anc++) {
+            lamp.smooth_hmm_array[i_window][i_anc].init_from_file(
+                    string("/Users/kangchenghou/work/LAMPLD-v1.3/out/anc_") + to_string(i_anc) + "_" +
+                    to_string(i_window * 200 + 100) + "_init.json");
+        }
+    }
 #endif
 
     lamp.fit(vec_ref_hap);

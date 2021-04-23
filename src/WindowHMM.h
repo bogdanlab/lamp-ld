@@ -32,7 +32,7 @@ public:
     void print_param();
 
 private:
-
+    void init_random_params(const MatrixXi & X);
     void compute_obs_loglkl(const VectorXi &x, MatrixXd &log_prob);
 
     void forward_pass(const MatrixXd &log_obs, MatrixXd &fwd_lattice, VectorXd &fwd_cond_prob);
@@ -61,7 +61,6 @@ private:
     const double proto_bias = 0.9;
     const double trans_prior = 0.00006;
     const double emit_prior = 0.001;
-    const bool init_add_noise = true;
 
     const int n_snp;
     const int n_proto;

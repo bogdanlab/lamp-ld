@@ -161,7 +161,12 @@ void LampLD::fit(std::vector<Eigen::MatrixXi> ref_list) {
         for (int i_anc = 0; i_anc < n_anc; i_anc++) {
             WindowHMM &hmm = hmm_array[i_window][i_anc];
             const MatrixXi &ref_chunk(ref_list[i_anc](Eigen::all, Eigen::seq(start, stop - 1)));
+
+#ifdef MY_DEBUG
             hmm.init_emit_from_X(ref_chunk);
+#else
+
+#endif
             hmm.fit(ref_chunk);
         }
     }
@@ -175,7 +180,11 @@ void LampLD::fit(std::vector<Eigen::MatrixXi> ref_list) {
             for (int i_anc = 0; i_anc < n_anc; i_anc++) {
                 WindowHMM &hmm = smooth_hmm_array[i_window][i_anc];
                 const MatrixXi &ref_chunk(ref_list[i_anc](Eigen::all, Eigen::seq(start, stop - 1)));
+#ifdef MY_DEBUG
                 hmm.init_emit_from_X(ref_chunk);
+#else
+
+#endif
                 hmm.fit(ref_chunk);
             }
         }

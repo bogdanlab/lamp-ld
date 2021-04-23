@@ -1,6 +1,7 @@
+# my ignore
 out/
 test_data/
-
+run.sh
 
 .DS_Store
 
