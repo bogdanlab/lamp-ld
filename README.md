@@ -1,5 +1,5 @@
 # LAMP-LD
-
+![python package](https://github.com/KangchengHou/lamp-ld/actions/workflows/python.yml/badge.svg)
 ## Install python version
 ```bash
 pip install -e .
