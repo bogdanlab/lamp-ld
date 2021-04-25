@@ -115,7 +115,7 @@ void LampLD::smooth_lanc(const MatrixXi &admix_hap, MatrixXi &lanc) {
 LampLD::LampLD(int n_snp, int n_anc, int n_proto, int window_size) : n_snp(n_snp), n_anc(n_anc), n_proto(n_proto) {
 
 
-    int n_window = int(n_snp / window_size);
+    int n_window = (int)ceil(n_snp / window_size);
     // initialize for HMM array
     snp_index = linspaced_int(n_window + 1, 0, n_snp);
     for (int i_window = 0; i_window < n_window; i_window++) {
