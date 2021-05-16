@@ -46,7 +46,7 @@ class CMakeBuild(build_ext):
             cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'.format(
                 cfg.upper(),
                 extdir)]
-            if sys.maxsize > 2**32:
+            if sys.maxsize > 2 ** 32:
                 cmake_args += ['-A', 'x64']
             build_args += ['--', '/m']
         else:
@@ -65,9 +65,14 @@ class CMakeBuild(build_ext):
                               cwd=self.build_temp)
         print()  # Add an empty line for cleaner output
 
+
 setup(
     name='pylampld',
     version='0.1',
+    install_requires=[
+        "pandas",
+        "pybind11",
+        "numpy"],
     author='Kangcheng Hou',
     author_email='kangchenghou@gmail.com',
     description='Local ancestry inference',
