@@ -2,7 +2,7 @@
 ![python package](https://github.com/KangchengHou/lamp-ld/actions/workflows/python.yml/badge.svg)
 ## Install python version
 ```bash
-pip install -e .
+pip install git+https://github.com/bogdanlab/lamp-ld.git#egg=pylampld
 ```
 ## Install executable version
 
