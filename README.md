@@ -4,6 +4,12 @@
 ```bash
 pip install -e .
 ```
+
+If you see errors, we recommend the following:
+```bash
+mamba install gcc_linux-64 g++_linux-64
+pip install cmake
+```
 ## Install executable version
 
 ```bash
